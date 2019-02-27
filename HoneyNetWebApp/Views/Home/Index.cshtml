@@ -1,0 +1,48 @@
+﻿@model IEnumerable<HoneyNetWebApp.Models.WebNodeModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Index";
+}
+
+<div><b>Node Table</b></div>
+<table class="table-bordered table-responsive table-hover">
+   
+        <tr>
+            <th>DPT</th>
+            <th>Protocol</th>
+            <th>SRC</th>
+            <th>IPAddress</th>
+            <th>TTL</th>
+            <th>Window</th>
+            <th>Day</th>
+            <th>Month</th>
+            <th>Node</th>
+            <th>Time</th>
+            <th>Other</th>
+        </tr>
+
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.DPT</td>
+                <td>@d.Protocol</td>
+                <td>@d.IPAddress</td>
+                <td>@d.TTL</td>
+                <td>@d.Window</td>
+                <td>@d.Day</td>
+                <td>@d.Month</td>
+                <td>@d.NodeLocation</td>
+                <td>@d.Time</td>
+                <td>@d._additionalData</td>
+
+            </tr>
+        }
+    }
+
+
+</table>
+
+
+
+                 
