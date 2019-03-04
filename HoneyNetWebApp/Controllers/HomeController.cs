@@ -13,13 +13,7 @@ namespace HoneyNetWebApp.Controllers
     public class HomeController : Controller
     {
         private INodeRepository _repository;
-        //private HomeController nodeTest = new HomeController(NodeRepository);
-        
-
-       /* public HomeController() : this(new NodeRepository())
-        {
-        }*/
-
+      
         public HomeController(INodeRepository repository)
         {
             _repository = repository;
@@ -28,19 +22,12 @@ namespace HoneyNetWebApp.Controllers
         // Deserialize JSON List -> OBJ List: /<controller>/
         public IEnumerable<Dictionary<string, Models.WebNodeModel>> GetResult()
         {
-            return new NodeService(_repository.GetNodeList(), _repository).NodeListToModelList();
+            return new NodeService(_repository.GetNodeList("/data/01Mar.json"), _repository).NodeListToModelList();
         }
-
-         //foreach (var item in nodeTest.GetResult())
-         //   {
-          //     foreach (var x in item)
-          //      {
-            //        OutPut += x.ToString()+"\r\n";
-             //   }
-                //}
+                
         public IActionResult Index()
         {
-            // WebNodeListModel nodeList = new WebNodeListModel();
+            
             List<WebNodeModel> nodeList = new List<WebNodeModel>();
             HomeController nodeDict = new HomeController(_repository);
             foreach(var item in nodeDict.GetResult())
@@ -48,8 +35,11 @@ namespace HoneyNetWebApp.Controllers
                 foreach ( var x in item)
                 {
                     nodeList.Add(x.Value);
+                    //ViewData["Message"] += x.ToString();
                 }
+                
             }
+
             return View(nodeList); 
         }
 

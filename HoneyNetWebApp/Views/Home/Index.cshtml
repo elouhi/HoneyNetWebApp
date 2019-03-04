@@ -4,7 +4,7 @@
     ViewData["Title"] = "Home Page";
     ViewBag.Title = "Index";
 }
-
+<h3>@ViewData["Message"]</h3>
 <div><b>Node Table</b></div>
 <table class="table-bordered table-responsive table-hover">
    
@@ -34,7 +34,7 @@
                 <td>@d.Month</td>
                 <td>@d.NodeLocation</td>
                 <td>@d.Time</td>
-                <td>@d._additionalData</td>
+                <td>@d.newString()</td>
 
             </tr>
         }
