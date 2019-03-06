@@ -11,8 +11,8 @@ namespace HoneyNetWebApp.Services
     public class NodeRepository : HoneyNetWebApp.Services.INodeRepository
     {
 
-        static string auth = "AIzaSyAZ-KsUVmqkYQN89yc37kIVOYfpS1pX7fo";         
-        static string authUrl = "honeynet-d9bd4.firebaseapp.com";
+        //static readonly string auth = "AIzaSyAZ-KsUVmqkYQN89yc37kIVOYfpS1pX7fo";         
+        //static readonly string authUrl = "honeynet-d9bd4.firebaseapp.com";
 
         public IRestResponse GetNodeList(string param)
         {

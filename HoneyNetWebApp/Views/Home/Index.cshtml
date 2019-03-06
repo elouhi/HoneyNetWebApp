@@ -1,13 +1,20 @@
 ﻿@model IEnumerable<HoneyNetWebApp.Models.WebNodeModel>
+    @{
+        ViewData["Title"] = "Index";
+       //ViewBag.Title = "Index";
+    }
 
-@{
-    ViewData["Title"] = "Home Page";
-    ViewBag.Title = "Index";
-}
-<h3>@ViewData["Message"]</h3>
-<div><b>Node Table</b></div>
-<table class="table-bordered table-responsive table-hover">
-   
+    <form asp-controller="HomeController" asp-action="Index">
+        <p>
+            Search: <input type="text" name="searchString">
+            <input type="submit" value="Filter" />
+            <h3>@ViewData["Message"]</h3>
+        </p>
+    </form>
+    @*Html.ListBox("CategoryID", (MultiSelectList)ViewBag.Categories)*@
+    <div><b>Node Table</b></div>
+    <table class="table-bordered table-responsive table-hover">
+
         <tr>
             <th>DPT</th>
             <th>Protocol</th>
@@ -22,7 +29,7 @@
             <th>Other</th>
         </tr>
 
-        @foreach (var d in Model)
+        @foreach (var d in ViewData["Search"] as List<WebNodeModel>)
         {
             <tr>
                 <td>@d.DPT</td>
@@ -34,15 +41,14 @@
                 <td>@d.Month</td>
                 <td>@d.NodeLocation</td>
                 <td>@d.Time</td>
-                <td>@d.newString()</td>
+                <td>@d.NewString()</td>
 
             </tr>
         }
-    }
+        }
 
 
-</table>
+    </table>
 
 
 
-                 

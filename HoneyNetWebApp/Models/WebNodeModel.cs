@@ -46,9 +46,15 @@ namespace HoneyNetWebApp.Models
                 Time);
         }       
 
+        public List<string> GetCategories()
+        {
+            return  typeof(WebNodeModel).GetFields()
+                .Select(field => field.Name)
+                .ToList();
+        }
      
         //TESTING: For testing the deserialization of _additionalData purposes 
-        public string newString()
+        public string NewString()
         {
             string test = "";
             try
@@ -57,7 +63,7 @@ namespace HoneyNetWebApp.Models
 
             }catch(Exception ex)
             {
-                return test = "N/A";
+                return test = ("N/A {0}" + ex);
             }
 
 
