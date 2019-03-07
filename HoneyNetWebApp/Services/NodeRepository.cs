@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
 using HoneyNetWebApp.Models;
+using HoneyNetWebApp.Controllers;
 
 namespace HoneyNetWebApp.Services
 {
@@ -18,7 +19,7 @@ namespace HoneyNetWebApp.Services
         {
             var client = new RestClient
             {
-                BaseUrl = new Uri("https://honeynet-d9bd4.firebaseio.com")
+                BaseUrl = new Uri("https://honeynet-d9bd4.firebaseio.com/")
             };
             var request = new RestRequest(param, Method.GET)
             {
@@ -26,12 +27,19 @@ namespace HoneyNetWebApp.Services
             }; 
             IRestResponse response = client.Execute(request);
             return response;            
-        }       
+        }        
+
+        List<WebNodeModel> INodeRepository.Search(string stringSearch, HomeController nodeDict)
+        {
+            throw new NotImplementedException();
+        }
     }
+    
 
     public interface INodeRepository
     {
         IRestResponse GetNodeList(string param);
+        List<WebNodeModel> Search(string stringSearch, HomeController nodeDict);
     }
 
 }

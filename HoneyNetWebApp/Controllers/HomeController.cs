@@ -52,29 +52,8 @@ namespace HoneyNetWebApp.Controllers
         /* Null check for stringSearch not working, showing as null in debugger,
          * not entering loops to create nodeDict-->nodeList
          * */
-        public IActionResult Index(string stringSearch)
-        {
-            // var nodes = from m in nodeList
-            //   select m;
-            /*   List<WebNodeModel> nodeList = new List<WebNodeModel>();
-               HomeController nodeDict = new HomeController(_repository);
-               if (!String.IsNullOrEmpty(stringSearch))
-               {
-                   // nodes = nodes.Where(s => s.Title.Contains(searchString));
-                   //  var items = Task.Run(() => nodeDict.GetResult(stringSearch));
-                   IEnumerable<Dictionary<string, Models.WebNodeModel>> items = await
-                       nodeDict.GetResult(stringSearch);
-                   //Return nodeDict to View as a nodeList (<LIST>)
-                   foreach (var item in items)
-                   {
-                       foreach (var x in item)
-                       {
-                           nodeList.Add(x.Value);
-                           //ViewData["Message"] += x.ToString();
-                       }
-                   }
-               }*/
-
+        public async Task <IActionResult> Index(string stringSearch)
+        {        
             //Multiple selection boxes
             /*  IndexViewModels catViewModel = new IndexViewModels();
               var categories = nodeList.First().GetCategories()
@@ -90,18 +69,20 @@ namespace HoneyNetWebApp.Controllers
             //return View(await query.ToListAsync());
             // List<WebNodeModel> nodes = Search(searchString).ToList();
             // ViewBag.Search = await Search(searchString);
-            ViewData["Search"] = Search(stringSearch);
+            
+           // var searchResults = 
+            ViewData["Search"] = await Search(stringSearch, new HomeController(_repository));
             return View();
         }
 
-        public async Task<IActionResult> Search(string stringSearch)
+
+        public async Task <IActionResult> Search(string stringSearch, HomeController nodeDict)
         {
-            List<WebNodeModel> nodeList = new List<WebNodeModel>();
-            HomeController nodeDict = new HomeController(_repository);
+            var nodeList = new List<WebNodeModel>();
+
             if (!String.IsNullOrEmpty(stringSearch))
             {
-               IEnumerable<Dictionary<string, Models.WebNodeModel>> items = await
-               nodeDict.GetResult("data/01Mar.json?");
+                var items = await nodeDict.GetResult(stringSearch);
                 //Return nodeDict to View as a nodeList (<LIST>)
                 foreach (var item in items)
                 {
@@ -111,11 +92,20 @@ namespace HoneyNetWebApp.Controllers
                         //ViewData["Message"] += x.ToString();
                     }
                 }
-                return View(nodeList);
+                return View("Index",nodeList);
+            }//Default for no searh term, need to escape and not show anything
+            var defualtItems = await nodeDict.GetResult("data/01Mar.json?");
+            //Return nodeDict to View as a nodeList (<LIST>)
+            foreach (var item in defualtItems)
+            {
+                foreach (var x in item)
+                {
+                    nodeList.Add(x.Value);
+                    //ViewData["Message"] += x.ToString();
+                }
             }
-            return View(nodeList);
+            return View("Index", nodeList);
         }
-
 
         public IActionResult Contact()
         {

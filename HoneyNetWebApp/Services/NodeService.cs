@@ -5,12 +5,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using HoneyNetWebApp.Models;
+using Microsoft.AspNetCore.Mvc;
+using HoneyNetWebApp.Controllers;
 
 namespace HoneyNetWebApp.Services 
 {
     public class NodeService : INodeService
     {
-        private readonly INodeRepository _repository;
+        private INodeRepository _repository;
         private IRestResponse _NodeList;
            
 
@@ -25,6 +28,8 @@ namespace HoneyNetWebApp.Services
           yield return JsonConvert.DeserializeObject<Dictionary<string, Models.WebNodeModel>>(_NodeList.Content);
         }  
     }
+
+    
 
     public interface INodeService
     {

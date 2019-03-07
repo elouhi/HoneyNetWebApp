@@ -4,11 +4,10 @@
        //ViewBag.Title = "Index";
     }
 
-    <form asp-controller="HomeController" asp-action="Index">
+    <form asp-controller="HomeController" asp-action="Search" method="get">
         <p>
-            Search: <input type="text" name="searchString">
-            <input type="submit" value="Filter" />
-            <h3>@ViewData["Message"]</h3>
+            Search: <input type="text" name="stringSearch">
+            <input type="submit" value="Submit" />           
         </p>
     </form>
     @*Html.ListBox("CategoryID", (MultiSelectList)ViewBag.Categories)*@
@@ -29,7 +28,7 @@
             <th>Other</th>
         </tr>
 
-        @foreach (var d in ViewData["Search"] as List<WebNodeModel>)
+        @foreach (var d in ViewData["Search"] )
         {
             <tr>
                 <td>@d.DPT</td>
