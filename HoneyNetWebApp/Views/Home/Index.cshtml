@@ -1,53 +1,17 @@
 ﻿@model IEnumerable<HoneyNetWebApp.Models.WebNodeModel>
     @{
         ViewData["Title"] = "Index";
-       //ViewBag.Title = "Index";
     }
-
-    <form asp-controller="HomeController" asp-action="Search" method="get">
-        <p>
-            Search: <input type="text" name="stringSearch">
-            <input type="submit" value="Submit" />           
-        </p>
-    </form>
+    
     @*Html.ListBox("CategoryID", (MultiSelectList)ViewBag.Categories)*@
-    <div><b>Node Table</b></div>
-    <table class="table-bordered table-responsive table-hover">
-
-        <tr>
-            <th>DPT</th>
-            <th>Protocol</th>
-            <th>SRC</th>
-            <th>IPAddress</th>
-            <th>TTL</th>
-            <th>Window</th>
-            <th>Day</th>
-            <th>Month</th>
-            <th>Node</th>
-            <th>Time</th>
-            <th>Other</th>
-        </tr>
-
-        @foreach (var d in ViewData["Search"] )
-        {
-            <tr>
-                <td>@d.DPT</td>
-                <td>@d.Protocol</td>
-                <td>@d.IPAddress</td>
-                <td>@d.TTL</td>
-                <td>@d.Window</td>
-                <td>@d.Day</td>
-                <td>@d.Month</td>
-                <td>@d.NodeLocation</td>
-                <td>@d.Time</td>
-                <td>@d.NewString()</td>
-
-            </tr>
-        }
-        }
-
-
-    </table>
+@using (Html.BeginForm("Search", "Home", FormMethod.Get))
+{
+    <p>
+        Search: @Html.TextBox("stringSearch")
+        <input type="submit" value="Search"/>
+    </p>
+}
+   
 
 
 

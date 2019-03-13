@@ -13,6 +13,7 @@ namespace HoneyNetWebApp.Controllers
 {
     public class HomeController : Controller
     {
+        
         private INodeRepository _repository;
         //private string stringSearch = "data/01Mar.json?";
 
@@ -52,8 +53,10 @@ namespace HoneyNetWebApp.Controllers
         /* Null check for stringSearch not working, showing as null in debugger,
          * not entering loops to create nodeDict-->nodeList
          * */
+        [HttpGet]        
         public async Task <IActionResult> Index(string stringSearch)
-        {        
+        {
+
             //Multiple selection boxes
             /*  IndexViewModels catViewModel = new IndexViewModels();
               var categories = nodeList.First().GetCategories()
@@ -69,43 +72,37 @@ namespace HoneyNetWebApp.Controllers
             //return View(await query.ToListAsync());
             // List<WebNodeModel> nodes = Search(searchString).ToList();
             // ViewBag.Search = await Search(searchString);
-            
-           // var searchResults = 
-            ViewData["Search"] = await Search(stringSearch, new HomeController(_repository));
+
+           
+
+            // Debug.WriteLine(searchResults.ToString());
+            // ViewData["Search"] = await Search(stringSearch, new HomeController(_repository)); 
+             
             return View();
         }
 
-
-        public async Task <IActionResult> Search(string stringSearch, HomeController nodeDict)
+       [HttpGet]
+        public async Task<IActionResult> Search(string stringSearch) 
         {
+            HomeController nodeDict = new HomeController(_repository);
             var nodeList = new List<WebNodeModel>();
-
-            if (!String.IsNullOrEmpty(stringSearch))
-            {
-                var items = await nodeDict.GetResult(stringSearch);
-                //Return nodeDict to View as a nodeList (<LIST>)
-                foreach (var item in items)
-                {
-                    foreach (var x in item)
+                if (!String.IsNullOrEmpty(stringSearch))
+                {                    
+                    var nodes = await nodeDict.GetResult(stringSearch);
+                    //Return nodeDict to View as a nodeList (<LIST>)
+                    foreach (var item in nodes)
                     {
-                        nodeList.Add(x.Value);
-                        //ViewData["Message"] += x.ToString();
-                    }
-                }
-                return View("Index",nodeList);
-            }//Default for no searh term, need to escape and not show anything
-            var defualtItems = await nodeDict.GetResult("data/01Mar.json?");
-            //Return nodeDict to View as a nodeList (<LIST>)
-            foreach (var item in defualtItems)
-            {
-                foreach (var x in item)
-                {
-                    nodeList.Add(x.Value);
-                    //ViewData["Message"] += x.ToString();
-                }
+                        foreach (var x in item)
+                        {
+                            nodeList.Add(x.Value);
+                        }
+                    }               
+                    var viewModel = new IndexNodeList(nodeList.ToList()).NodeList;
+                    return View(viewModel.ToList());
+                }                    
+            return View();
             }
-            return View("Index", nodeList);
-        }
+        
 
         public IActionResult Contact()
         {

@@ -8,6 +8,7 @@ namespace HoneyNetWebApp.Models
 {
     public class IndexViewModels
     {
+        
         public IndexViewModels()
         {
         }
@@ -21,4 +22,5 @@ namespace HoneyNetWebApp.Models
         public int[] CatageoryID { get; set; }
         public MultiSelectList Categories { get; set; }
     }
+
 }

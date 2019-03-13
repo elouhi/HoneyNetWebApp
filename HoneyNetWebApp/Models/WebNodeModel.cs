@@ -2,10 +2,12 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace HoneyNetWebApp.Models
 {
+    //[DebuggerDisplay("WebNodeModel, {DPT, Protocol, IPAddress, TTL, Window, Day, Month, NodeLocation, Time, nq") ]
     public class WebNodeModel 
     {
         [JsonProperty("DPT")]
@@ -71,6 +73,33 @@ namespace HoneyNetWebApp.Models
         }
     }
 
+    public class IndexNodeList
+    {
+        public List<WebNodeModel> NodeList { get; set; }
 
+        public IndexNodeList(List<WebNodeModel> nodeList)
+        {
+            this.NodeList = nodeList;
+        }
+
+        public IndexNodeList()
+        {
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+    }
 
 }
