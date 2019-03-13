@@ -39,11 +39,11 @@ namespace HoneyNetWebApp.Services
         
         
 
-        public IRestResponse GetNodeList(string param)
+        public IRestResponse GetNodeList(string param, string catID)
         {
             var client = new RestClient
             {
-                BaseUrl = new Uri("https://honeynet-d9bd4.firebaseio.com/"),
+                BaseUrl = new Uri("https://honeynet-d9bd4.firebaseio.com/data/"),
                 Authenticator = new HttpBasicAuthenticator("dbuser@gmail.com", "dbuser")
              };
             
@@ -69,7 +69,7 @@ namespace HoneyNetWebApp.Services
 
     public interface INodeRepository
     {
-        IRestResponse GetNodeList(string param);
+        IRestResponse GetNodeList(string param, string catID);
         List<WebNodeModel> Search(string stringSearch, HomeController nodeDict);
     }
 

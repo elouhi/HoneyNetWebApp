@@ -61,7 +61,7 @@ namespace HoneyNetWebApp.Models
             string test = "";
             try
             {
-                this._additionalData.ToList().ForEach(k => test += (k.Key + ": {0},", k.Value));
+                this._additionalData.ToList().ForEach(k => test += (k.Key + ": "+ k.Value +" "));
 
             }catch(Exception ex)
             {
@@ -101,5 +101,23 @@ namespace HoneyNetWebApp.Models
             return base.ToString();
         }
     }
+
+    //Model for drop down list
+    public class DropDown
+    {
+
+        public DropDown()
+        {
+        }
+
+        public DropDown(int[] catageoryID)
+        {
+            CatageoryID = catageoryID;
+            
+        }
+        public int[] CatageoryID { get; set; }
+        
+    }
+
 
 }

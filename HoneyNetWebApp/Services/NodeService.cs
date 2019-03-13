@@ -13,9 +13,8 @@ namespace HoneyNetWebApp.Services
 {
     public class NodeService : INodeService
     {
-        private INodeRepository _repository;
+        private readonly INodeRepository _repository;
         private IRestResponse _NodeList;
-           
 
         public NodeService(IRestResponse NodeList, INodeRepository repository)
         {
@@ -28,7 +27,6 @@ namespace HoneyNetWebApp.Services
           yield return JsonConvert.DeserializeObject<Dictionary<string, Models.WebNodeModel>>(_NodeList.Content);
         }  
     }
-
     
 
     public interface INodeService

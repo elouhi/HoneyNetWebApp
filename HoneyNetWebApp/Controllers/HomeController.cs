@@ -23,31 +23,22 @@ namespace HoneyNetWebApp.Controllers
         }
 
         // Deserialize JSON List -> OBJ List: /<controller>/
-        public async Task<IEnumerable<Dictionary<string, Models.WebNodeModel>>> GetResult(string stringSearch)
+        public async Task<IEnumerable<Dictionary<string, Models.WebNodeModel>>> GetResult(string stringSearch, string catID)
         {
-            return await Task.Run(() => new NodeService(_repository.GetNodeList(stringSearch), _repository)
-            .NodeListToModelList());
+            if (!String.IsNullOrWhiteSpace(catID))
+            {
+                return await Task.Run(() => new NodeService(_repository
+                    .GetNodeList(stringSearch, catID), _repository)
+                    .NodeListToModelList());
+            }
+            else
+            {
+                return await Task.Run(() => new NodeService(_repository
+                    .GetNodeList(stringSearch, null), _repository)
+                    .NodeListToModelList());
+            }                
         }
-
-        //return await Task.Run(() => new NodeService(_repository.GetNodeList(stringSearch), _repository)
-        //  .NodeListToModelList());
-
-        /* public IActionResult Index()
-         {            
-             List<WebNodeModel> nodeList = new List<WebNodeModel>();
-             HomeController nodeDict = new HomeController(_repository);
-             foreach(var item in nodeDict.GetResult())
-             {
-                 foreach ( var x in item)
-                 {
-                     nodeList.Add(x.Value);
-                     //ViewData["Message"] += x.ToString();
-                 }
-
-             }
-
-             return View(nodeList); 
-         }*/
+               
 
 
         /* Null check for stringSearch not working, showing as null in debugger,
@@ -57,38 +48,23 @@ namespace HoneyNetWebApp.Controllers
         public async Task <IActionResult> Index(string stringSearch)
         {
 
-            //Multiple selection boxes
-            /*  IndexViewModels catViewModel = new IndexViewModels();
-              var categories = nodeList.First().GetCategories()
-                  .Select(c => new
-                  {
-                      CategoryID = c.CategoryID                    
-                  }).ToList() ;
-              ViewBag.Categories = new MultiSelectList(categories, "CaregoryID");
-              */
-            // var query = from item in nodeDict.GetResult(stringSearch)
-            //           select item;
-
-            //return View(await query.ToListAsync());
-            // List<WebNodeModel> nodes = Search(searchString).ToList();
-            // ViewBag.Search = await Search(searchString);
-
-           
-
-            // Debug.WriteLine(searchResults.ToString());
-            // ViewData["Search"] = await Search(stringSearch, new HomeController(_repository)); 
-             
+            
             return View();
         }
 
        [HttpGet]
-        public async Task<IActionResult> Search(string stringSearch) 
+        public async Task<IActionResult> Search(string stringSearch, string CatagoryID) 
         {
             HomeController nodeDict = new HomeController(_repository);
             var nodeList = new List<WebNodeModel>();
                 if (!String.IsNullOrEmpty(stringSearch))
-                {                    
-                    var nodes = await nodeDict.GetResult(stringSearch);
+                {
+                    var viewModel = new IndexNodeList();
+                    var catList = new WebNodeModel().GetCategories();
+                    ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
+                if (!String.IsNullOrWhiteSpace(CatagoryID))
+                {
+                    var nodes = await nodeDict.GetResult(stringSearch, CatagoryID);
                     //Return nodeDict to View as a nodeList (<LIST>)
                     foreach (var item in nodes)
                     {
@@ -96,9 +72,22 @@ namespace HoneyNetWebApp.Controllers
                         {
                             nodeList.Add(x.Value);
                         }
-                    }               
-                    var viewModel = new IndexNodeList(nodeList.ToList()).NodeList;
-                    return View(viewModel.ToList());
+                    }
+                }
+                else
+                {
+                    var nodes = await nodeDict.GetResult(stringSearch, null);
+                    //Return nodeDict to View as a nodeList (<LIST>)
+                    foreach (var item in nodes)
+                    {
+                        foreach (var x in item)
+                        {
+                            nodeList.Add(x.Value);
+                        }
+                    }
+                }                
+                    viewModel.NodeList = nodeList.ToList();
+                    return View(viewModel.NodeList.ToList());
                 }                    
             return View();
             }
