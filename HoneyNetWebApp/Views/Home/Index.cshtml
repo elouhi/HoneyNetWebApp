@@ -8,7 +8,8 @@
 {
     <p>
         Search: @Html.TextBox("stringSearch")
-        @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
+        Filter By: @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
+        Real-Time: @Html.CheckBox("EventStream", (bool)ViewBag.EventStream)
         <input type="submit" value="Search" />
     </p>
 }

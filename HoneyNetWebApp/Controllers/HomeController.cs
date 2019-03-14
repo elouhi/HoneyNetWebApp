@@ -49,19 +49,23 @@ namespace HoneyNetWebApp.Controllers
         {
             var catList = new WebNodeModel().GetCategories();
             ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
+            ViewBag.EventStream = false;
             return View();
         }
 
        [HttpGet]
-        public async Task<IActionResult> Search(string stringSearch, string CatagoryID) 
+        public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream) 
         {
             HomeController nodeDict = new HomeController(_repository);
             var nodeList = new List<WebNodeModel>();
             var catList = new WebNodeModel().GetCategories();
             ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
+            ViewBag.EventStream = false;
             if (!String.IsNullOrEmpty(stringSearch))
-                {
-                    var viewModel = new IndexNodeList();                   
+            {
+                //if(EventStream != null){
+                //ViewBag.EventStream = Convert.ToBoolean(EventStream);
+                   var viewModel = new IndexNodeList();                   
                 if (!String.IsNullOrWhiteSpace(CatagoryID))
                 {
                     var nodes = await nodeDict.GetResult(stringSearch, CatagoryID);
