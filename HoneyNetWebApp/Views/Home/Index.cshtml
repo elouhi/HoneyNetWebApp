@@ -8,7 +8,8 @@
 {
     <p>
         Search: @Html.TextBox("stringSearch")
-        <input type="submit" value="Search"/>
+        @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
+        <input type="submit" value="Search" />
     </p>
 }
    

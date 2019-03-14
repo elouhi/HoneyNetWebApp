@@ -13,9 +13,9 @@ namespace HoneyNetWebApp.Models
         [JsonProperty("DPT")]
         public string DPT { get; set; }
         [JsonProperty("PROTO")]
-        public string Protocol { get; set; }
+        public string PROTO { get; set; }
         [JsonProperty("SRC")]
-        public string IPAddress { get; set; }
+        public string SRC { get; set; }
         [JsonProperty("TTL")]
         public string TTL { get; set; }
         [JsonProperty("WINDOW")]
@@ -25,7 +25,7 @@ namespace HoneyNetWebApp.Models
         [JsonProperty("month")]
         public string Month { get; set; }
         [JsonProperty("node")]
-        public string NodeLocation { get; set; }
+        public string Node { get; set; }
         [JsonProperty("time")]
         public string Time { get; set; }
         [JsonExtensionData]
@@ -44,15 +44,22 @@ namespace HoneyNetWebApp.Models
         public override string ToString()
         {
             return string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}",
-                DPT, Protocol, IPAddress, TTL, Window, DPT, Month, NodeLocation,
+                DPT, PROTO, SRC, TTL, Window, DPT, Month, Node,
                 Time);
-        }       
+        }
 
+
+        /*typeof(WebNodeModel).GetFields()
+                .Select(field => field.Name.ToString())
+                .ToList();*/
         public List<string> GetCategories()
         {
-            return  typeof(WebNodeModel).GetFields()
-                .Select(field => field.Name)
-                .ToList();
+            List<string> items = new List<string>();
+            foreach ( var prop in new WebNodeModel().GetType().GetProperties())
+            {
+                items.Add(prop.Name);
+            }
+            return items;
         }
      
         //TESTING: For testing the deserialization of _additionalData purposes 
@@ -121,3 +128,4 @@ namespace HoneyNetWebApp.Models
 
 
 }
+ 

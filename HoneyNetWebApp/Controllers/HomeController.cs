@@ -34,7 +34,7 @@ namespace HoneyNetWebApp.Controllers
             else
             {
                 return await Task.Run(() => new NodeService(_repository
-                    .GetNodeList(stringSearch, null), _repository)
+                    .GetNodeList(stringSearch), _repository)
                     .NodeListToModelList());
             }                
         }
@@ -47,8 +47,8 @@ namespace HoneyNetWebApp.Controllers
         [HttpGet]        
         public async Task <IActionResult> Index(string stringSearch)
         {
-
-            
+            var catList = new WebNodeModel().GetCategories();
+            ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
             return View();
         }
 
@@ -57,11 +57,11 @@ namespace HoneyNetWebApp.Controllers
         {
             HomeController nodeDict = new HomeController(_repository);
             var nodeList = new List<WebNodeModel>();
-                if (!String.IsNullOrEmpty(stringSearch))
+            var catList = new WebNodeModel().GetCategories();
+            ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
+            if (!String.IsNullOrEmpty(stringSearch))
                 {
-                    var viewModel = new IndexNodeList();
-                    var catList = new WebNodeModel().GetCategories();
-                    ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
+                    var viewModel = new IndexNodeList();                   
                 if (!String.IsNullOrWhiteSpace(CatagoryID))
                 {
                     var nodes = await nodeDict.GetResult(stringSearch, CatagoryID);

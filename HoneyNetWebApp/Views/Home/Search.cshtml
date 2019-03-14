@@ -9,7 +9,7 @@
 {
     <p>
         Search: @Html.TextBox("stringSearch")
-        @Html.DropDownList("CatagoryID", (SelectList)ViewBag.CatagoryID, "Select Fiter")
+        @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
         <input type="submit" value="Search" />
     </p>
 }   
@@ -37,13 +37,13 @@
         {
             <tr>
                 <td>@d.DPT</td>
-                <td>@d.Protocol</td>
-                <td>@d.IPAddress</td>
+                <td>@d.PROTO</td>
+                <td>@d.SRC</td>
                 <td>@d.TTL</td>
                 <td>@d.Window</td>
                 <td>@d.Day</td>
                 <td>@d.Month</td>
-                <td>@d.NodeLocation</td>
+                <td>@d.Node</td>
                 <td>@d.Time</td>
                 <td>@d.NewString()</td>
 
