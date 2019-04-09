@@ -13,10 +13,10 @@ namespace HoneyNetWebApp.Services
 {
     public class NodeService : INodeService
     {
-        private readonly INodeRepository _repository;
+        private readonly IMongoNodeRepository _repository;
         private IRestResponse _NodeList;
 
-        public NodeService(IRestResponse NodeList, INodeRepository repository)
+        public NodeService(IRestResponse NodeList, IMongoNodeRepository repository)
         {
             _NodeList = NodeList;
             _repository = repository;

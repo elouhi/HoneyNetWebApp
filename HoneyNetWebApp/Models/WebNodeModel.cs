@@ -1,34 +1,37 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace HoneyNetWebApp.Models
 {
     //[DebuggerDisplay("WebNodeModel, {DPT, Protocol, IPAddress, TTL, Window, Day, Month, NodeLocation, Time, nq") ]
-    public class WebNodeModel 
+    public class WebNodeModel
     {
-        [JsonProperty("DPT")]
+        [BsonId]
+        public ObjectId Id { get; set; }
+        [BsonElement("dpt")]
         public string DPT { get; set; }
-        [JsonProperty("PROTO")]
+        [BsonElement("proto")]
         public string PROTO { get; set; }
-        [JsonProperty("SRC")]
+        [BsonElement("srcip")]
         public string SRC { get; set; }
-        [JsonProperty("TTL")]
+        [BsonElement("ttl")]
         public string TTL { get; set; }
-        [JsonProperty("WINDOW")]
+        [BsonElement("windowsize")]
         public string Window { get; set; }
-        [JsonProperty("day")]
-        public string Day { get; set; }
-        [JsonProperty("month")]
-        public string Month { get; set; }
-        [JsonProperty("node")]
+       /* [BsonElement("day")]
+        public string Day { get; set; } 
+        [BsonElement("month")]
+        public string Month { get; set; }*/
+        [BsonElement("nodename")]
         public string Node { get; set; }
-        [JsonProperty("time")]
-        public string Time { get; set; }
-        [JsonExtensionData]
+        /*[BsonElement("time")]
+        public string Time { get; set; }*/
+        [BsonDateTimeOptions]
+        public DateTime Date {get; set;}
+        [BsonExtraElements]
         public IDictionary<string, object> _additionalData { get; set; }
 
         public override bool Equals(object obj)
@@ -44,8 +47,8 @@ namespace HoneyNetWebApp.Models
         public override string ToString()
         {
             return string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}",
-                DPT, PROTO, SRC, TTL, Window, DPT, Month, Node,
-                Time);
+                DPT, PROTO, SRC, TTL, Window, DPT, Node,
+                Date);
         }
 
 

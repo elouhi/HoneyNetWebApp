@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HoneyNetWebApp.Models;
-using Newtonsoft.Json.Linq;
 using HoneyNetWebApp.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,29 +13,26 @@ namespace HoneyNetWebApp.Controllers
     public class HomeController : Controller
     {
         
-        private INodeRepository _repository;
+        private HoneyNetWebApp.Services.IMongoNodeRepository _repository;
         //private string stringSearch = "data/01Mar.json?";
 
-        public HomeController(INodeRepository repository)
+        public HomeController(HoneyNetWebApp.Services.IMongoNodeRepository repository)
         {
             _repository = repository;
         }
 
         // Deserialize JSON List -> OBJ List: /<controller>/
-        public async Task<IEnumerable<Dictionary<string, Models.WebNodeModel>>> GetResult(string stringSearch, string catID)
+        public async Task<List<Models.WebNodeModel>> GetResult(string stringSearch, string fieldName)
         {
-            if (!String.IsNullOrWhiteSpace(catID))
+            if (!String.IsNullOrWhiteSpace(stringSearch))
             {
-                return await Task.Run(() => new NodeService(_repository
-                    .GetNodeList(stringSearch, catID), _repository)
-                    .NodeListToModelList());
+                return await Task.Run(() => _repository
+                    .GetNodeByField(stringSearch, fieldName));
+                   
             }
             else
             {
-                return await Task.Run(() => new NodeService(_repository
-                    .GetNodeList(stringSearch), _repository)
-                    .NodeListToModelList());
-            }                
+                return await Task.Run(() => _repository.GetAllNodes());            }                
         }
                
 
@@ -56,8 +52,7 @@ namespace HoneyNetWebApp.Controllers
        [HttpGet]
         public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream) 
         {
-            HomeController nodeDict = new HomeController(_repository);
-            var nodeList = new List<WebNodeModel>();
+            HomeController nodeDict = new HomeController(_repository);            
             var catList = new WebNodeModel().GetCategories();
             ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
             ViewBag.EventStream = false;
@@ -65,35 +60,21 @@ namespace HoneyNetWebApp.Controllers
             {
                 //if(EventStream != null){
                 //ViewBag.EventStream = Convert.ToBoolean(EventStream);
-                   var viewModel = new IndexNodeList();                   
+                var viewModel = new IndexNodeList();                   
                 if (!String.IsNullOrWhiteSpace(CatagoryID))
                 {
-                    var nodes = await nodeDict.GetResult(stringSearch, CatagoryID);
-                    //Return nodeDict to View as a nodeList (<LIST>)
-                    foreach (var item in nodes)
-                    {
-                        foreach (var x in item)
-                        {
-                            nodeList.Add(x.Value);
-                        }
-                    }
+                    var nodeList = await nodeDict.GetResult(stringSearch, CatagoryID);
+                    //Return View as a nodeList (<LIST>)
+                    return View(nodeList);
                 }
                 else
                 {
-                    var nodes = await nodeDict.GetResult(stringSearch, null);
-                    //Return nodeDict to View as a nodeList (<LIST>)
-                    foreach (var item in nodes)
-                    {
-                        foreach (var x in item)
-                        {
-                            nodeList.Add(x.Value);
-                        }
-                    }
-                }                
-                    viewModel.NodeList = nodeList.ToList();
-                    return View(viewModel.NodeList.ToList());
-                }                    
-            return View();
+                    var nodeList = await nodeDict.GetResult(stringSearch, null);
+                    //Return View as a nodeList (<LIST>)
+                    return View(nodeList);
+                }                                      
+             }                    
+            return View(await nodeDict.GetResult(stringSearch, CatagoryID));
             }
         
 

@@ -34,7 +34,7 @@ namespace HoneyNetWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddScoped<INodeRepository, NodeRepository>();
+            services.AddScoped<IMongoNodeRepository, MongoNodeRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
