@@ -6,33 +6,59 @@ using System.Linq;
 
 namespace HoneyNetWebApp.Models
 {
-    //[DebuggerDisplay("WebNodeModel, {DPT, Protocol, IPAddress, TTL, Window, Day, Month, NodeLocation, Time, nq") ]
     public class WebNodeModel
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        public ObjectId Id { get; set; }   
+        
         [BsonElement("dpt")]
         public string DPT { get; set; }
+
         [BsonElement("proto")]
         public string PROTO { get; set; }
+
         [BsonElement("srcip")]
+        [BsonDefaultValue("N/A")]
         public string SRC { get; set; }
+
         [BsonElement("ttl")]
         public string TTL { get; set; }
+
         [BsonElement("windowsize")]
-        public string Window { get; set; }
-       /* [BsonElement("day")]
-        public string Day { get; set; } 
-        [BsonElement("month")]
-        public string Month { get; set; }*/
+        public string Window { get; set; }   
+        
         [BsonElement("nodename")]
-        public string Node { get; set; }
-        /*[BsonElement("time")]
-        public string Time { get; set; }*/
-        [BsonDateTimeOptions]
-        public DateTime Date {get; set;}
+        public string Node { get; set; }     
+        
+        [BsonElement("time")]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        public DateTime Time {get; set;}
+
+        [BsonElement("countrycode")]
+        public string countryCode { get; set; }
+
+        [BsonElement("city")]
+        public string City { get; set; }
+        //Bson Type is a Double, cannot deserialize into a string type,
+        //Not able to consume a null as a double either
+      //  [BsonRepresentation(BsonType.Double)]
+        [BsonElement("lat")]              
+        public object Lat { get; set; }
+       //[BsonRepresentation(BsonType.Double)]
+        [BsonElement("long")]
+        public object Long { get; set; }
+
+        [BsonElement("rdns")]
+        public string Rdns { get; set; }
+
+        [BsonElement("type")]
+        public string Type { get; set; }
+
+        [BsonElement("code")]
+        public string Code { get; set; }
+
         [BsonExtraElements]
-        public IDictionary<string, object> _additionalData { get; set; }
+        public IDictionary<string, object> _additionalData { get; set; } 
 
         public override bool Equals(object obj)
         {
@@ -44,17 +70,14 @@ namespace HoneyNetWebApp.Models
             return base.GetHashCode();
         }
 
+        //Add net missing fields
         public override string ToString()
         {
-            return string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}",
+            return string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}",
                 DPT, PROTO, SRC, TTL, Window, DPT, Node,
-                Date);
+                Time);
         }
 
-
-        /*typeof(WebNodeModel).GetFields()
-                .Select(field => field.Name.ToString())
-                .ToList();*/
         public List<string> GetCategories()
         {
             List<string> items = new List<string>();
@@ -74,11 +97,9 @@ namespace HoneyNetWebApp.Models
                 this._additionalData.ToList().ForEach(k => test += (k.Key + ": "+ k.Value +" "));
 
             }catch(Exception ex)
-            {
-                return test = ("N/A {0}" + ex);
+            {//("N/A {0}" + ex)
+                return test = null;
             }
-
-
             return test;
         }
     }
@@ -131,4 +152,5 @@ namespace HoneyNetWebApp.Models
 
 
 }
+ 
  

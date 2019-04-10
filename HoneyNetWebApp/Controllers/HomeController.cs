@@ -22,7 +22,7 @@ namespace HoneyNetWebApp.Controllers
         }
 
         // Deserialize JSON List -> OBJ List: /<controller>/
-        public async Task<List<Models.WebNodeModel>> GetResult(string stringSearch, string fieldName)
+        public async Task<List<Models.WebNodeModel>> GetResult(string fieldName, string stringSearch)
         {
             if (!String.IsNullOrWhiteSpace(stringSearch))
             {
@@ -34,14 +34,15 @@ namespace HoneyNetWebApp.Controllers
                 return await Task.Run(() => _repository.GetAllNodes());
             }                
         }
-               
+
 
 
         /* Null check for stringSearch not working, showing as null in debugger,
          * not entering loops to create nodeDict-->nodeList
+         * Changed from async Task to normal IActionResult method
          * */
-        [HttpGet]        
-        public async Task <IActionResult> Index(string stringSearch)
+        [HttpGet]
+        public IActionResult Index(string stringSearch)
         {
             var catList = new WebNodeModel().GetCategories();
             ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
@@ -49,7 +50,7 @@ namespace HoneyNetWebApp.Controllers
             return View();
         }
 
-       [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream) 
         {
             HomeController nodeDict = new HomeController(_repository);            

@@ -25,13 +25,13 @@ namespace HoneyNetWebApp.Services
 
         public async Task<List<HoneyNetWebApp.Models.WebNodeModel>> GetAllNodes()
         {
-            return await _nodeCollection.Find(new BsonDocument()).ToListAsync();
+            return await _nodeCollection.Find(new BsonDocument()).Limit(30).ToListAsync();
         }
 
         //Returns a list of nodes based on the name and value of the field
         public async Task<List<HoneyNetWebApp.Models.WebNodeModel>> GetNodeByField(string fieldName, string fieldValue){
             var filter = Builders<HoneyNetWebApp.Models.WebNodeModel>.Filter.Eq(fieldName, fieldValue);
-            var result = await _nodeCollection.Find(filter).ToListAsync();
+            var result = await _nodeCollection.Find(filter).Limit(30).ToListAsync();
             return result;
         }
 
@@ -39,7 +39,7 @@ namespace HoneyNetWebApp.Services
         public async Task<List<HoneyNetWebApp.Models.WebNodeModel>> GetNodesPaging(int startingFrom, int count)
         {
             var result = await _nodeCollection.Find(new BsonDocument())
-                .Skip(startingFrom).Limit(count).ToListAsync();
+                .Skip(startingFrom).Limit(count).Limit(30).ToListAsync();
             return result;
         }
 
