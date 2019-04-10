@@ -12,7 +12,7 @@ namespace HoneyNetWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        
+        //Need to remove, wasting CPU cycles and memory calling repo twice
         private HoneyNetWebApp.Services.IMongoNodeRepository _repository;
         //private string stringSearch = "data/01Mar.json?";
 
@@ -27,12 +27,12 @@ namespace HoneyNetWebApp.Controllers
             if (!String.IsNullOrWhiteSpace(stringSearch))
             {
                 return await Task.Run(() => _repository
-                    .GetNodeByField(stringSearch, fieldName));
-                   
+                    .GetNodeByField(fieldName, stringSearch));                   
             }
             else
             {
-                return await Task.Run(() => _repository.GetAllNodes());            }                
+                return await Task.Run(() => _repository.GetAllNodes());
+            }                
         }
                
 
@@ -63,18 +63,18 @@ namespace HoneyNetWebApp.Controllers
                 var viewModel = new IndexNodeList();                   
                 if (!String.IsNullOrWhiteSpace(CatagoryID))
                 {
-                    var nodeList = await nodeDict.GetResult(stringSearch, CatagoryID);
+                    var nodeList = await nodeDict.GetResult(CatagoryID.ToLower(), stringSearch);
                     //Return View as a nodeList (<LIST>)
                     return View(nodeList);
                 }
                 else
                 {
-                    var nodeList = await nodeDict.GetResult(stringSearch, null);
+                    var nodeList = await nodeDict.GetResult(null, stringSearch);
                     //Return View as a nodeList (<LIST>)
                     return View(nodeList);
                 }                                      
              }                    
-            return View(await nodeDict.GetResult(stringSearch, CatagoryID));
+            return View(await nodeDict.GetResult(CatagoryID, stringSearch));
             }
         
 

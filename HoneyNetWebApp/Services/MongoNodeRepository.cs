@@ -52,11 +52,6 @@ namespace HoneyNetWebApp.Services
             var result = await _nodeCollection.Find(filter & filterSecond).ToListAsync();
             return result;
         }
-
-        public Task<List<WebNodeModel>> GetAllNodes(string stringSearch)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public interface IMongoNodeRepository
