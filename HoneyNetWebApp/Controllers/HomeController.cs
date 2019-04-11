@@ -35,6 +35,20 @@ namespace HoneyNetWebApp.Controllers
             }                
         }
 
+        // Deserialize JSON List -> OBJ List: /<controller>/
+        public async Task<List<Models.WebNodeModel>> GetResultWithDate(string fieldName, string stringSearch, DateTime? start, DateTime? end)
+        {
+            if (!String.IsNullOrWhiteSpace(stringSearch))
+            {
+                return await Task.Run(() => _repository
+                    .GetNodesByDateRange(fieldName, stringSearch, start, end));
+            }
+            else
+            {
+                return await Task.Run(() => _repository.GetAllNodesWithDate(start, end));
+            }
+        }
+
 
 
         /* Null check for stringSearch not working, showing as null in debugger,
@@ -51,7 +65,7 @@ namespace HoneyNetWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream) 
+        public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream, DateTime? startDate, DateTime? endDate) 
         {
             HomeController nodeDict = new HomeController(_repository);            
             var catList = new WebNodeModel().GetCategories();
@@ -61,18 +75,37 @@ namespace HoneyNetWebApp.Controllers
             {
                 //if(EventStream != null){
                 //ViewBag.EventStream = Convert.ToBoolean(EventStream);
-                var viewModel = new IndexNodeList();                   
+                var viewModel = new IndexNodeList();
                 if (!String.IsNullOrWhiteSpace(CatagoryID))
-                {
-                    var nodeList = await nodeDict.GetResult(CatagoryID.ToLower(), stringSearch);
-                    //Return View as a nodeList (<LIST>)
-                    return View(nodeList);
+                {//Check to see if you can have params with? to overload a single getResult method
+                    if (startDate != null || endDate != null)
+                    {
+                        var nodeList = await nodeDict.GetResultWithDate(CatagoryID.ToLower(), stringSearch, startDate, endDate);
+                        //Return View as a nodeList (<LIST>)
+                        return View(nodeList);
+                    }
+                    else
+                    {
+                        var nodeList = await nodeDict.GetResult(CatagoryID.ToLower(), stringSearch);
+                        //Return View as a nodeList (<LIST>)
+                        return View(nodeList);
+
+                    }
                 }
                 else
                 {
-                    var nodeList = await nodeDict.GetResult(null, stringSearch);
-                    //Return View as a nodeList (<LIST>)
-                    return View(nodeList);
+                    if (startDate != null || endDate != null)
+                    {
+                        var nodeList = await nodeDict.GetResultWithDate(stringSearch);
+                        //Return View as a nodeList (<LIST>)
+                        return View(nodeList);
+                    }
+                    else
+                    {
+                        var nodeList = await nodeDict.GetResult(null, stringSearch);
+                        //Return View as a nodeList (<LIST>)
+                        return View(nodeList);
+                    }
                 }                                      
              }                    
             return View(await nodeDict.GetResult(CatagoryID, stringSearch));
