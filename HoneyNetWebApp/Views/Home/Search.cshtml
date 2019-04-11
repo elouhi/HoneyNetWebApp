@@ -31,13 +31,15 @@
 
 @using (Html.BeginForm("Search", "Home", FormMethod.Get))
 {
-    <p>
-        Search: @Html.TextBox("stringSearch")
-        Filter By: @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
-        Real-Time: @Html.CheckBox("EventStream", (bool)ViewBag.EventStream)
+<p>
+    Search: @Html.TextBox("stringSearch")
+    Filter By: @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
+    Start Date/Time:@Html.TextBox("startDate")
+    End Date/Time: @Html.TextBox("endDate")
+    Real-Time: @Html.CheckBox("EventStream", (bool)ViewBag.EventStream)
 
-        <input type="submit" value="Search" />
-    </p>
+    <input type="submit" value="Search" />
+</p>
 }
 
 <div class="container">
@@ -50,20 +52,20 @@
             <p>
                 <table class="table-bordered table-responsive table-hover" style="table-layout:auto; width: 100%; overflow:auto">
                     <tr>
-                        <th>DPT</th>
-                        <th>Protocol</th>
-                        <th>SRC</th>
-                        <th>TTL</th>
-                        <th>Window</th>
-                        <th>Time</th>
-                        <th>Node</th>
-                        <th>CC</th>
-                        <th>City</th>
-                        <th>Lat</th>
-                        <th>Long</th>
-                        <th>Type</th>
-                        <th>Code</th>
-                        <th>RDNS</th>
+                        <th> @Html.ActionLink("DPT", "Search", new { Sorting_Order = ViewBag.SortingName})</th>
+                        <th> @Html.ActionLink("PROTO", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("SRC", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("TTL", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("Window", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("Time", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("Node", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("CC", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("City", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("Lat", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("Long", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("Type", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("Code", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
+                        <th> @Html.ActionLink("RDNS", "Search", new { Sorting_Order = ViewBag.SortingName })</th>       
                         <th>Other</th>
                     </tr>
 

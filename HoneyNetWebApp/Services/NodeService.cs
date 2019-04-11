@@ -13,25 +13,62 @@ namespace HoneyNetWebApp.Services
 {
     public class NodeService : INodeService
     {
-        private readonly IMongoNodeRepository _repository;
-        private IRestResponse _NodeList;
+        
+        private List<HoneyNetWebApp.Models.WebNodeModel> _nodeList;
 
-        public NodeService(IRestResponse NodeList, IMongoNodeRepository repository)
+        public NodeService()
         {
-            _NodeList = NodeList;
-            _repository = repository;
+           _NodeList = NodeList;
+       
         }
 
-        public IEnumerable<Dictionary<string, HoneyNetWebApp.Models.WebNodeModel>> NodeListToModelList()
+        public async Task<IEnumerable<HoneyNetWebApp.Models.WebNodeModel>> HeaderSort(List<HoneyNetWebApp.Models.WebNodeModel> nodeList, string Sort_Order)
         {
-          yield return JsonConvert.DeserializeObject<Dictionary<string, Models.WebNodeModel>>(_NodeList.Content);
-        }  
+            if (!String.IsNullOrWhiteSpace(Sort_Order))
+            {
+                switch (Sort_Order)
+                {
+                    case "DPT":
+                        return nodeList.OrderBy(node => node.DPT).ToList();
+                    case "PROTO":
+                        return nodeList.OrderBy(node => node.PROTO).ToList();
+                    case "SRC":
+                        return nodeList.OrderBy(node => node.SRC).ToList();
+                    case "TTL":
+                        return nodeList.OrderBy(node => node.TTL).ToList();
+                    case "Window":
+                        return nodeList.OrderBy(node => node.Window).ToList();
+                    case "Node":
+                        return nodeList.OrderBy(node => node.Node).ToList();
+                    case "Time":
+                        return nodeList.OrderBy(node => node.Time).ToList();
+                    case "CC":
+                        return nodeList.OrderBy(node => node.countryCode).ToList();
+                    case "City":
+                        return nodeList.OrderBy(node => node.City).ToList();
+                    case "Lat":
+                        return nodeList.OrderBy(node => node.Lat).ToList();
+                    case "Long":
+                        return nodeList.OrderBy(node => node.Long).ToList();
+                    case "RDNS":
+                        return nodeList.OrderBy(node => node.Rdns).ToList();
+                    case "Type":
+                        return nodeList.OrderBy(node => node.Type).ToList();
+                    case "Code":
+                        return nodeList.OrderBy(node => node.Code).ToList();
+                    default:
+                        break;
+                }
+            }
+            return nodeList;
+        }
+       
     }
     
 
     public interface INodeService
-    {
-        IEnumerable<Dictionary<string, Models.WebNodeModel>> NodeListToModelList();
+    {      
+        Task<IEnumerable<HoneyNetWebApp.Models.WebNodeModel>> HeaderSort(List<HoneyNetWebApp.Models.WebNodeModel> nodeList, string Sort_Order);
     }
 
 }

@@ -31,7 +31,7 @@ namespace HoneyNetWebApp.Models
         public string Node { get; set; }     
         
         [BsonElement("time")]
-        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
         public DateTime Time {get; set;}
 
         [BsonElement("countrycode")]

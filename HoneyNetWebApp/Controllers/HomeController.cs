@@ -14,10 +14,12 @@ namespace HoneyNetWebApp.Controllers
     {
         //Need to remove, wasting CPU cycles and memory calling repo twice
         private HoneyNetWebApp.Services.IMongoNodeRepository _repository;
+        private HoneyNetWebApp.Services.INodeService _service;
         //private string stringSearch = "data/01Mar.json?";
 
-        public HomeController(HoneyNetWebApp.Services.IMongoNodeRepository repository)
+        public HomeController(HoneyNetWebApp.Services.IMongoNodeRepository repository, HoneyNetWebApp.Services.INodeService service)
         {
+            _service = service;
             _repository = repository;
         }
 
@@ -64,12 +66,16 @@ namespace HoneyNetWebApp.Controllers
             return View();
         }
 
+
+
+
         [HttpGet]
-        public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream, DateTime? startDate, DateTime? endDate) 
+        public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream, DateTime? startDate, DateTime? endDate, string Sorting_Order) 
         {
-            HomeController nodeDict = new HomeController(_repository);            
+            HomeController nodeDict = new HomeController(_repository, _service);            
             var catList = new WebNodeModel().GetCategories();
             ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
+            ViewBag.SortingName = Sorting_Order;
             ViewBag.EventStream = false;
             if (!String.IsNullOrEmpty(stringSearch))
             {
@@ -78,37 +84,37 @@ namespace HoneyNetWebApp.Controllers
                 var viewModel = new IndexNodeList();
                 if (!String.IsNullOrWhiteSpace(CatagoryID))
                 {//Check to see if you can have params with? to overload a single getResult method
-                    if (startDate != null || endDate != null)
+                    if (startDate != null && endDate != null)
                     {
                         var nodeList = await nodeDict.GetResultWithDate(CatagoryID.ToLower(), stringSearch, startDate, endDate);
                         //Return View as a nodeList (<LIST>)
-                        return View(nodeList);
+                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
                     }
                     else
                     {
                         var nodeList = await nodeDict.GetResult(CatagoryID.ToLower(), stringSearch);
                         //Return View as a nodeList (<LIST>)
-                        return View(nodeList);
+                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
 
                     }
                 }
                 else
                 {
-                    if (startDate != null || endDate != null)
+                    if (startDate != null && endDate != null)
                     {
-                        var nodeList = await nodeDict.GetResultWithDate(stringSearch);
+                        var nodeList = await nodeDict.GetResultWithDate(null, stringSearch, startDate, endDate);
                         //Return View as a nodeList (<LIST>)
-                        return View(nodeList);
+                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
                     }
                     else
                     {
                         var nodeList = await nodeDict.GetResult(null, stringSearch);
                         //Return View as a nodeList (<LIST>)
-                        return View(nodeList);
+                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
                     }
                 }                                      
              }                    
-            return View(await nodeDict.GetResult(CatagoryID, stringSearch));
+            return View();
             }
         
 
@@ -129,5 +135,10 @@ namespace HoneyNetWebApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        //Real Time Stream
+
+
+
     }
 }

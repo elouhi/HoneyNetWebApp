@@ -6,12 +6,14 @@
     @*Html.ListBox("CategoryID", (MultiSelectList)ViewBag.Categories)*@
 @using (Html.BeginForm("Search", "Home", FormMethod.Get))
 {
-    <p>
-        Search: @Html.TextBox("stringSearch")
-        Filter By: @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
-        Real-Time: @Html.CheckBox("EventStream", (bool)ViewBag.EventStream)
-        <input type="submit" value="Search" />
-    </p>
+<p>
+    Search: @Html.TextBox("stringSearch")
+    Filter By: @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
+    Start Date/Time:@Html.TextBox("startDate")
+    End Date/Time: @Html.TextBox("endDate")
+    Real-Time: @Html.CheckBox("EventStream", (bool)ViewBag.EventStream)
+    <input type="submit" value="Search" />
+</p>
 }
    
 
