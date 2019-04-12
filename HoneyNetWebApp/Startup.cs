@@ -35,6 +35,7 @@ namespace HoneyNetWebApp
             });
 
             services.AddScoped<IMongoNodeRepository, MongoNodeRepository>();
+            services.AddScoped<INodeService, NodeService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

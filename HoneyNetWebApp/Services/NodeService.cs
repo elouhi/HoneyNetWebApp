@@ -18,7 +18,7 @@ namespace HoneyNetWebApp.Services
 
         public NodeService()
         {
-           _NodeList = NodeList;
+            List<HoneyNetWebApp.Models.WebNodeModel> _nodeList;
        
         }
 
