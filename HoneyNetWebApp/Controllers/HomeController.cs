@@ -88,14 +88,16 @@ namespace HoneyNetWebApp.Controllers
                     {
                         var nodeList = await nodeDict.GetResultWithDate(CatagoryID.ToLower(), stringSearch, startDate, endDate);
                         //Return View as a nodeList (<LIST>)
-                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+                        //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+                        return View(await nodeDict._service.ConvertToDataTable(nodeList));
                     }
                     else
                     {
                         var nodeList = await nodeDict.GetResult(CatagoryID.ToLower(), stringSearch);
                         //Return View as a nodeList (<LIST>)
-                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
-
+                        //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+                        //return View(await nodeDict._service.ConvertToDataTable(nodeList));
+                        return View(await nodeDict._service.ConvertToDataTable(nodeList));
                     }
                 }
                 else
@@ -104,18 +106,17 @@ namespace HoneyNetWebApp.Controllers
                     {
                         var nodeList = await nodeDict.GetResultWithDate(null, stringSearch, startDate, endDate);
                         //Return View as a nodeList (<LIST>)
-                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
-                    }
-                    else
-                    {
-                        var nodeList = await nodeDict.GetResult(null, stringSearch);
-                        //Return View as a nodeList (<LIST>)
-                        return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
-                    }
+                        //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+                        return View(await nodeDict._service.ConvertToDataTable(nodeList));
+                    }                                       
                 }                                      
-             }                    
-            return View();
-            }
+             }
+            //Default empty ssearch, returns entire collection 
+            var defaultNodeList = await nodeDict.GetResult(null, stringSearch);
+            //Return View as a defaultNodeList (<LIST>)
+            //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+            return View(await nodeDict._service.ConvertToDataTable(defaultNodeList));
+        }
         
 
         public IActionResult Contact()

@@ -1,9 +1,11 @@
-﻿@model IEnumerable<HoneyNetWebApp.Models.WebNodeModel>
+﻿@model System.Data.DataTable
+@using System.Data;
+@using System.Web.Optimization
+
 @{
     ViewData["Title"] = "Search";
 }
-@using System.Web.Optimization
-@using System.Data
+
 
 <head>
     <title>Styled Map Types</title>
@@ -31,72 +33,64 @@
 
 @using (Html.BeginForm("Search", "Home", FormMethod.Get))
 {
-<p>
-    Search: @Html.TextBox("stringSearch")
-    Filter By: @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
-    Start Date/Time:@Html.TextBox("startDate")
-    End Date/Time: @Html.TextBox("endDate")
-    Real-Time: @Html.CheckBox("EventStream", (bool)ViewBag.EventStream)
+    <p>
+        Search: @Html.TextBox("stringSearch")
+        Filter By: @Html.DropDownList("CatagoryID", ViewBag.CatagoryID as SelectList)
+        Start Date/Time:@Html.TextBox("startDate")
+        End Date/Time: @Html.TextBox("endDate")
+        Real-Time: @Html.CheckBox("EventStream", (bool)ViewBag.EventStream)
 
-    <input type="submit" value="Search" />
-</p>
+        <input type="submit" value="Search" />
+    </p>
 }
 
 <div class="container">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a class="nav-link active" href="#table" data-toggle="tab">Table</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#nodeTable" data-toggle="tab">Table</a></li>
         <li class="nav-item"><a class="nav-link" href="#map" data-toggle="tab">Node Map</a></li>
     </ul>
     <div class="tab-content">
-        <div id="table" class="container tab-pane active">
-            <p>
-                <table class="table-bordered table-responsive table-hover" style="table-layout:auto; width: 100%; overflow:auto">
+        <div id="nodeTable" class="container tab-pane active">
+            <table class="table" style="table-layout:auto; width: 100%; overflow:auto">
+                <thead>
                     <tr>
-                        <th> @Html.ActionLink("DPT", "Search", new { Sorting_Order = ViewBag.SortingName})</th>
-                        <th> @Html.ActionLink("PROTO", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("SRC", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("TTL", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("Window", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("Time", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("Node", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("CC", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("City", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("Lat", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("Long", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("Type", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("Code", "Search", new { Sorting_Order = ViewBag.SortingName })</th>
-                        <th> @Html.ActionLink("RDNS", "Search", new { Sorting_Order = ViewBag.SortingName })</th>       
-                        <th>Other</th>
-                    </tr>
-
-                    @if (Model != null)
-                    {
-                        @foreach (var d in Model)
+                        @foreach (DataColumn col in Model.Columns)
                         {
-                    <tr>
-                        <td>@d.DPT</td>
-                        <td>@d.PROTO</td>
-                        <td>@d.SRC</td>
-                        <td>@d.TTL</td>
-                        <td>@d.Window</td>
-                        <td>@d.Time</td>
-                        <td>@d.Node</td>
-                        <td>@d.countryCode</td>
-                        <td>@d.City</td>
-                        <td>@d.Lat</td>
-                        <td>@d.Long</td>
-                        <td>@d.Type</td>
-                        <td>@d.Code</td>
-                        <td>@d.Rdns</td>
-                        <td>@d.NewString()</td>
-
-                    </tr>
+                            <th>@col.ColumnName</th>
                         }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow row in Model.Rows)
+                    {
+                        <tr>
+                            @foreach (DataColumn col in Model.Columns)
+                            {
+                                <td>@row[col.ColumnName]</td>
+                            }
+                        </tr>
                     }
+                </tbody>
+            </table>
+        </div>
+        <link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+        @section Scripts{
+            <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
 
-                </table>
-            </p>
-        </div>   
+            <script>
+                $(document).ready(function () {
+                    $(".table").dataTable({
+                        paging: true,
+                        select: true,
+                        stateSave: true,
+                        autoWidth: true, @*Possible redundency with table header auto width*@
+                        "sPaginationType": "full_numbers",
+                        "sDom": "rtip"
+                    });
+                })
+            </script>
+        }
+
         <div id="map" class="container tab-pane fade">
             @*Google-Map-API*@
             <p>

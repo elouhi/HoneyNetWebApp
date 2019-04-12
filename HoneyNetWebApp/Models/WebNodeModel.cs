@@ -57,8 +57,8 @@ namespace HoneyNetWebApp.Models
         [BsonElement("code")]
         public string Code { get; set; }
 
-        [BsonExtraElements]
-        public IDictionary<string, object> _additionalData { get; set; } 
+        [BsonExtraElements]//This field is not converting to a data object correctly due to the generalization of the conversion method
+        public IDictionary<string, object> _additionalData { get; set; }//Need to use the "additonalDataToString" method some how to override this 
 
         public override bool Equals(object obj)
         {
@@ -89,18 +89,20 @@ namespace HoneyNetWebApp.Models
         }
      
         //TESTING: For testing the deserialization of _additionalData purposes 
-        public string NewString()
+        public string additonalDataToString()
         {
-            string test = "";
+            string newString = "";
             try
             {
-                this._additionalData.ToList().ForEach(k => test += (k.Key + ": "+ k.Value +" "));
+                this._additionalData.ToList().ForEach(k => newString += (k.Key + ": "+ k.Value +" \n"));
 
+#pragma warning disable CS0168 // Variable is declared but never used
             }catch(Exception ex)
+#pragma warning restore CS0168 // Variable is declared but never used
             {//("N/A {0}" + ex)
-                return test = null;
+                return newString = null;
             }
-            return test;
+            return newString;
         }
     }
 
