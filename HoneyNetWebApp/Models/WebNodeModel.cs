@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace HoneyNetWebApp.Models
 {
@@ -57,8 +58,9 @@ namespace HoneyNetWebApp.Models
         [BsonElement("code")]
         public string Code { get; set; }
 
-        [BsonExtraElements]//This field is not converting to a data object correctly due to the generalization of the conversion method
-        public IDictionary<string, object> _additionalData { get; set; }//Need to use the "additonalDataToString" method some how to override this 
+        [BsonExtraElements]//This field catches all the unknown/extra properties in the document as a BsonDoc
+        public BsonDocument _additionalData { get; set; }
+       
 
         public override bool Equals(object obj)
         {
@@ -89,7 +91,7 @@ namespace HoneyNetWebApp.Models
         }
      
         //TESTING: For testing the deserialization of _additionalData purposes 
-        public string additonalDataToString()
+       /* public string additonalDataToString()
         {
             string newString = "";
             try
@@ -103,7 +105,7 @@ namespace HoneyNetWebApp.Models
                 return newString = null;
             }
             return newString;
-        }
+        }*/
     }
 
     public class IndexNodeList

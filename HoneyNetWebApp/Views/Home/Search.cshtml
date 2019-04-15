@@ -95,7 +95,7 @@
             @*Google-Map-API*@
             <p>
                 <script>
-                    function initMap() {
+                    function initMap() {                        
                         var styledMapType = new google.maps.StyledMapType(
                             [
                                 {
@@ -372,7 +372,11 @@
                                     'styled_map']
                             },
                         });
-                        map.mapTypes.set('styled_map', styledMapType);
+                       //foreach (DataRow row in Model.Rows)
+                      //  {
+                      //     var nodeLatLng = new google.maps.LatLang(row["Lat"], row["Long"]);
+                       // }
+                        map.mapTypes.set('styled_map', foreach;
                         map.setMapTypeId('styled_map');
 
                     }
