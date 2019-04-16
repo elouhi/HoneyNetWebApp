@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using HoneyNetWebApp.Models;
 using HoneyNetWebApp.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace HoneyNetWebApp.Controllers
 {
@@ -70,12 +71,12 @@ namespace HoneyNetWebApp.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream, DateTime? startDate, DateTime? endDate, string Sorting_Order) 
+        public async Task<IActionResult> Search(string stringSearch, string CatagoryID, bool? EventStream, DateTime? startDate, DateTime? endDate) 
         {
             HomeController nodeDict = new HomeController(_repository, _service);            
             var catList = new WebNodeModel().GetCategories();
-            ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");
-            ViewBag.SortingName = Sorting_Order;
+            ViewBag.CatagoryID = new SelectList(catList, "CatagoryID");          
+            
             ViewBag.EventStream = false;
             if (!String.IsNullOrEmpty(stringSearch))
             {
@@ -87,16 +88,15 @@ namespace HoneyNetWebApp.Controllers
                     if (startDate != null && endDate != null)
                     {
                         var nodeList = await nodeDict.GetResultWithDate(CatagoryID.ToLower(), stringSearch, startDate, endDate);
-                        //Return View as a nodeList (<LIST>)
-                        //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+                        ViewBag.MapMarkers = JsonConvert.SerializeObject(nodeList);
+                        //Return View as a nodeList (<LIST>)                      
                         return View(await nodeDict._service.ConvertToDataTable(nodeList));
                     }
                     else
                     {
                         var nodeList = await nodeDict.GetResult(CatagoryID.ToLower(), stringSearch);
-                        //Return View as a nodeList (<LIST>)
-                        //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
-                        //return View(await nodeDict._service.ConvertToDataTable(nodeList));
+                        //Return View as a nodeList (<LIST>)     
+                        ViewBag.MapMarkers = JsonConvert.SerializeObject(nodeList);
                         return View(await nodeDict._service.ConvertToDataTable(nodeList));
                     }
                 }
@@ -105,16 +105,16 @@ namespace HoneyNetWebApp.Controllers
                     if (startDate != null && endDate != null)
                     {
                         var nodeList = await nodeDict.GetResultWithDate(null, stringSearch, startDate, endDate);
-                        //Return View as a nodeList (<LIST>)
-                        //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+                        //Return View as a nodeList (<LIST>)        
+                        ViewBag.MapMarkers = JsonConvert.SerializeObject(nodeList);
                         return View(await nodeDict._service.ConvertToDataTable(nodeList));
                     }                                       
                 }                                      
              }
             //Default empty ssearch, returns entire collection 
             var defaultNodeList = await nodeDict.GetResult(null, stringSearch);
-            //Return View as a defaultNodeList (<LIST>)
-            //return View(await nodeDict._service.HeaderSort(nodeList, Sorting_Order));
+            //Return View as a defaultNodeList (<LIST>)  
+            ViewBag.MapMarkers = JsonConvert.SerializeObject(defaultNodeList);
             return View(await nodeDict._service.ConvertToDataTable(defaultNodeList));
         }
         

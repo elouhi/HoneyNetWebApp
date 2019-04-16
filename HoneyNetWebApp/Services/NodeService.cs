@@ -89,6 +89,12 @@ namespace HoneyNetWebApp.Services
             return table;
         }
 
+        //Creates a list of map markers
+        public async Task<string> nodeListToJsonString (List<WebNodeModel> nodeList)
+        {
+            return JsonConvert.SerializeObject(nodeList);
+        }
+
     }
     
    

@@ -372,11 +372,31 @@
                                     'styled_map']
                             },
                         });
-                       //foreach (DataRow row in Model.Rows)
-                      //  {
-                      //     var nodeLatLng = new google.maps.LatLang(row["Lat"], row["Long"]);
-                       // }
-                        map.mapTypes.set('styled_map', foreach;
+                       
+                        var markers = @Html.Raw(@ViewBag.MapMarkers); 
+                        
+                        for (i = 0; i < markers.length; i++) {
+                            var data = markers[i];
+                            var contentString = "<div id='content'><br>City: " + data.City + "\n" + "CC: "+ data.countryCode +"\n" + "Node: " + data.Node+"</br></div>"; 
+                            var latLng = new google.maps.LatLng(data.Lat, data.Long);
+                            var marker = new google.maps.Marker({
+                                position: latLng,
+                                map: map,
+                                title: data.SRC
+                            });                    
+                            var infoWindow = new google.maps.InfoWindow({
+                                content: contentString,
+                                width: 192,
+                                height: 100
+                            });
+                            (function (marker){
+                                google.maps.event.addListener(marker, "click", function (e) {
+                                    
+                                    infoWindow.open(map, marker);
+                                });
+                            })(marker);
+                        }
+                        map.mapTypes.set('styled_map', styledMapType);
                         map.setMapTypeId('styled_map');
 
                     }
@@ -384,6 +404,7 @@
                 <script async defer
                         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9fSWwqy7wVEheaaOtqVhfrxodZZo6BEE&callback=initMap">
                 </script>
+                
             </p>
         </div>
     </div>
