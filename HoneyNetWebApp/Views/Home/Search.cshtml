@@ -372,29 +372,27 @@
                                     'styled_map']
                             },
                         });
-                       
+                      
                         var markers = @Html.Raw(@ViewBag.MapMarkers); 
-                        
+                        var infoWindow = new google.maps.InfoWindow({
+                            width: 192,
+                            height: 100
+                        });
                         for (i = 0; i < markers.length; i++) {
-                            var data = markers[i];
-                            var contentString = "<div id='content'><br>City: " + data.City + "\n" + "CC: "+ data.countryCode +"\n" + "Node: " + data.Node+"</br></div>"; 
+                            var data = markers[i];                       
                             var latLng = new google.maps.LatLng(data.Lat, data.Long);
                             var marker = new google.maps.Marker({
                                 position: latLng,
                                 map: map,
                                 title: data.SRC
                             });                    
-                            var infoWindow = new google.maps.InfoWindow({
-                                content: contentString,
-                                width: 192,
-                                height: 100
-                            });
-                            (function (marker){
-                                google.maps.event.addListener(marker, "click", function (e) {
-                                    
+                            (function (marker, data) {
+                                new google.maps.event.addListener(marker, "click", function () {
+                                    infoWindow.setContent('<div id="content"><br>City: ' + data.City + '\n' + 'CC: ' + data.countryCode + '\n' + 'Node: ' + data.Node + '</br></div>')
                                     infoWindow.open(map, marker);
-                                });
-                            })(marker);
+                                });   
+                            })(marker, data);
+                                               
                         }
                         map.mapTypes.set('styled_map', styledMapType);
                         map.setMapTypeId('styled_map');
