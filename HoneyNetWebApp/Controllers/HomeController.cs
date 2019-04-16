@@ -88,6 +88,7 @@ namespace HoneyNetWebApp.Controllers
                     if (startDate != null && endDate != null)
                     {
                         var nodeList = await nodeDict.GetResultWithDate(CatagoryID.ToLower(), stringSearch, startDate, endDate);
+                        //Converts the nodeList to a Json object for the google map markers
                         ViewBag.MapMarkers = JsonConvert.SerializeObject(nodeList);
                         //Return View as a nodeList (<LIST>)                      
                         return View(await nodeDict._service.ConvertToDataTable(nodeList));
